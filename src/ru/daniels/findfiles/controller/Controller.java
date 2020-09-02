@@ -16,7 +16,7 @@ public class Controller {
     public TextField fieldPathToFile;
     public TextField fieldKeyword;
     public TextField fieldExtension;
-    public TreeView<String> fileTree;
+    public TreeView<Object> fileTree;
     public ScrollPane filesScrollPane;
     public Label pathLabel;
     public Label keywordLabel;
@@ -42,8 +42,8 @@ public class Controller {
         }
     }
 
-    private TreeItem<String> createTree(TreeItem<String> root, List<Leaf> files){
-        TreeItem<String> start;
+    private TreeItem<Object> createTree(TreeItem<Object> root, List<Leaf> files){
+        TreeItem<Object> start;
         String[] tmp;
         boolean find;
         for(Leaf file : files){
@@ -51,7 +51,7 @@ public class Controller {
             tmp = file.getPath().toString().replace(fieldPathToFile.getText(), "").split("\\\\");
             for(String s: tmp) {
                 find = false;
-                for(TreeItem<String> node: start.getChildren()){
+                for(TreeItem<Object> node: start.getChildren()){
                     if(node.getValue().equals(s)){
                         start = node;
                         find = true;
@@ -59,13 +59,18 @@ public class Controller {
                     }
                 }
                 if(find) continue;
-                TreeItem<String> newItem = new TreeItem<>(s);
+                TreeItem<Object> newItem = new TreeItem<>(s);
                 start.getChildren().add(newItem);
                 start = newItem;
             }
+            start.setValue(file);
         }
-        fileTree.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) ->
-                System.out.println("name: " + newValue.getValue() + ", leaf: " + newValue.isLeaf()));
+        fileTree.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) ->{
+            if(newValue.isLeaf() && newValue.getValue() instanceof Leaf){
+                Leaf leaf = (Leaf) newValue.getValue();
+                System.out.println(leaf.getPath());
+            }
+        });
         return root;
     }
 
@@ -106,7 +111,7 @@ public class Controller {
         File file = new File(path);
         String name = file.getName();
         name = name.equals("") ? file.toString() : name;
-        TreeItem<String> root = new TreeItem<>(name);
+        TreeItem<Object> root = new TreeItem<>(name);
 
         searcher.addEventHandler(WorkerStateEvent.WORKER_STATE_SUCCEEDED, event -> {
             fileTree.setRoot(createTree(root, searcher.getValue()));
