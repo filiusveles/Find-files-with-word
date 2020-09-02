@@ -2,6 +2,7 @@ package ru.daniels.findfiles.utils;
 
 import com.sun.istack.internal.NotNull;
 import javafx.concurrent.Task;
+import ru.daniels.findfiles.model.Leaf;
 
 import java.io.File;
 import java.io.FileReader;
@@ -12,7 +13,7 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.util.LinkedList;
 import java.util.List;
 
-public class FileSearcher extends Task<List<Path>> {
+public class FileSearcher extends Task<List<Leaf>> {
     private final String extension;
     private final String path;
     private final String keyword;
@@ -25,12 +26,12 @@ public class FileSearcher extends Task<List<Path>> {
 
 
     @Override
-    protected List<Path> call() {
+    protected List<Leaf> call() {
         return files();
     }
 
-    private List<Path> files(){
-        List<Path> files = new LinkedList<>();
+    private List<Leaf> files(){
+        List<Leaf> files = new LinkedList<>();
         File root = new File(path);
         try {
             Files.walkFileTree(root.toPath(), new FileVisit(files));
@@ -41,9 +42,9 @@ public class FileSearcher extends Task<List<Path>> {
     }
 
     class FileVisit extends SimpleFileVisitor<Path> {
-        private final List<Path> files;
+        private final List<Leaf> files;
 
-        public FileVisit(List<Path> files){
+        public FileVisit(List<Leaf> files){
             this.files = files;
         }
 
@@ -51,7 +52,7 @@ public class FileSearcher extends Task<List<Path>> {
         @Override
         public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
             if(file.toString().endsWith(extension) && isWordContains(file.toUri()))
-                files.add(file);
+                files.add(new Leaf(file));
             return super.visitFile(file, attrs);
         }
 

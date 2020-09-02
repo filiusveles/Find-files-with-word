@@ -1,13 +1,14 @@
 package ru.daniels.findfiles.controller;
 
-import com.sun.istack.internal.NotNull;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.scene.control.*;
 import javafx.stage.DirectoryChooser;
+import ru.daniels.findfiles.model.Leaf;
 import ru.daniels.findfiles.utils.FileSearcher;
 import java.io.File;
 import java.nio.file.Path;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 public class Controller {
@@ -25,6 +26,9 @@ public class Controller {
     private String extension = ".log";
 
 
+    private HashMap<String, Leaf> files = new HashMap<>();
+
+
     public void startSearch() {
         if(checkValues()) showProgressWhenWait();
     }
@@ -38,13 +42,13 @@ public class Controller {
         }
     }
 
-    private TreeItem<String> createTree(TreeItem<String> root, List<Path> files){
+    private TreeItem<String> createTree(TreeItem<String> root, List<Leaf> files){
         TreeItem<String> start;
         String[] tmp;
         boolean find;
-        for(Path path: files){
+        for(Leaf file : files){
             start = root;
-            tmp = path.toString().replace(fieldPathToFile.getText(), "").split("\\\\");
+            tmp = file.getPath().toString().replace(fieldPathToFile.getText(), "").split("\\\\");
             for(String s: tmp) {
                 find = false;
                 for(TreeItem<String> node: start.getChildren()){
