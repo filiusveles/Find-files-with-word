@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-
 <VBox prefHeight="593.0" prefWidth="843.0" xmlns="http://javafx.com/javafx/8.0.241" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="ru.daniels.findfiles.controller.Controller">
    <AnchorPane prefHeight="462.0" prefWidth="682.0" VBox.vgrow="ALWAYS">
@@ -34,16 +33,14 @@
                  GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowSpan="2"
                  GridPane.valignment="CENTER" onAction="#startSearch"/>
          <Button mnemonicParsing="false" text="Обзор..." GridPane.columnIndex="3"
-                 GridPane.halignment="CENTER" onAction="#showExplorer"/>
+                 GridPane.halignment="CENTER" onAction="#showSystemExplorer"/>
       </GridPane>
       <ScrollPane fx:id="filesScrollPane" fitToHeight="true" fitToWidth="true" layoutY="80.0" prefHeight="493.0" prefWidth="300.0"
                   AnchorPane.rightAnchor="547.0">
-         <TreeView fx:id="fileTree" prefHeight="491.0" prefWidth="402.0"/>
+         <!--<TreeView fx:id="fileTree" prefHeight="491.0" prefWidth="402.0"/>-->
       </ScrollPane>
       <TabPane fx:id="filesTabPane" cacheShape="false" layoutX="310.0" layoutY="80.0" prefHeight="493.0"
-               prefWidth="532.0" tabClosingPolicy="UNAVAILABLE" visible="false">
-         <Tab>
-         </Tab>
+               prefWidth="532.0" tabClosingPolicy="UNAVAILABLE">
       </TabPane>
    </AnchorPane>
 </VBox>

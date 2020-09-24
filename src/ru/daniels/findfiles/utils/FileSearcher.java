@@ -5,25 +5,24 @@ import javafx.concurrent.Task;
 import ru.daniels.findfiles.model.Leaf;
 
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
-import java.net.URI;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.LinkedList;
 import java.util.List;
 
+
 public class FileSearcher extends Task<List<Leaf>> {
-    private final String extension;
-    private final String path;
-    private final String keyword;
+    private  String extension;
+    private  String path;
+    private  String keyword;
 
     public FileSearcher(@NotNull String path, String keyword, String extension){
         this.path = path;
         this.keyword = keyword;
         this.extension = extension;
     }
-
 
     @Override
     protected List<Leaf> call() {
@@ -41,6 +40,16 @@ public class FileSearcher extends Task<List<Leaf>> {
         return files;
     }
 
+    protected boolean isWordContains(Path path){
+            try {
+                return Files.lines(path, StandardCharsets.ISO_8859_1)
+                        .anyMatch((s) -> s.contains(keyword));
+            } catch (IOException e) {
+                e.printStackTrace();
+                return false;
+            }
+    }
+
     class FileVisit extends SimpleFileVisitor<Path> {
         private final List<Leaf> files;
 
@@ -48,10 +57,9 @@ public class FileSearcher extends Task<List<Leaf>> {
             this.files = files;
         }
 
-
         @Override
         public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-            if(file.toString().endsWith(extension) && isWordContains(file.toUri()))
+            if(file.toString().endsWith(extension) && isWordContains(file))
                 files.add(new Leaf(file));
             return super.visitFile(file, attrs);
         }
@@ -62,22 +70,6 @@ public class FileSearcher extends Task<List<Leaf>> {
             return super.visitFileFailed(file, exc);
         }
 
-        private boolean isWordContains(URI path){
-            byte[] bytes = keyword.getBytes();
-
-            try(FileReader reader = new FileReader(new File(path))) {
-                int c;
-                int counter = 0;
-                while ((c=reader.read())!=-1){
-                    if(counter == bytes.length-1) return true;
-                    if(c == bytes[counter]) counter++;
-                    else counter = 0;
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return false;
-        }
 
     }
 }
