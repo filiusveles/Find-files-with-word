@@ -7,13 +7,11 @@ import java.util.List;
 public class Leaf{
     private final Path path;
     private final String name;
-    private List<Integer> pointsWithWord;
-    private boolean isFindPints;
+    private List<Integer> wordPositions;
 
     public Leaf(Path path){
         this.path = path;
         this.name = path.getFileName().toString();
-        isFindPints = false;
     }
 
     public Path getPath(){
@@ -25,26 +23,21 @@ public class Leaf{
     }
 
     public void addPoint(Integer point){
-        if(pointsWithWord == null){
-            pointsWithWord = new ArrayList<>();
+        if(wordPositions == null){
+            wordPositions = new ArrayList<>();
         }
-        pointsWithWord.add(point);
+        wordPositions.add(point);
     }
 
     /**
      * Получает список позиций совпадений в тексте
      * @return список позиций
      */
-    public List<Integer> getPointsWithWord(){
-        if(pointsWithWord == null){
+    public List<Integer> getWordPositions(){
+        if(wordPositions == null){
             return new ArrayList<>();
         }
-        isFindPints = true;
-        return pointsWithWord;
-    }
-
-    public boolean isFindPints() {
-        return isFindPints;
+        return wordPositions;
     }
 
     @Override
